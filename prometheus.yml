@@ -1,0 +1,47 @@
+# prometheus.yml
+global:
+  scrape_interval: 15s     # How frequently to scrape targets by default
+  evaluation_interval: 15s  # How frequently to evaluate rules
+  scrape_timeout: 10s      # How long until a scrape request times out
+
+# Alertmanager configuration (commented out as we're not using it yet)
+# alerting:
+#   alertmanagers:
+#   - static_configs:
+#     - targets:
+#       - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config
+  - job_name: 'temperature_metrics'
+    
+    # Override the global default and scrape targets from this job every 5 seconds
+    scrape_interval: 5s
+    
+    static_configs:
+      - targets: ['metrics-service-2:8000', 'metrics-service-1:8000']
+        labels:
+          environment: 'development'
+
+  # Example of adding multiple instances (if you run the service on different machines)
+  # - job_name: 'temperature_metrics_prod'
+  #   scrape_interval: 5s
+  #   static_configs:
+  #     - targets: 
+  #       - 'prod-server1:8000'
+  #       - 'prod-server2:8000'
+  #     labels:
+  #       environment: 'production'
+
+# Optional: Configure remote write/read if you want to integrate with remote storage
+# remote_write:
+#   - url: 'http://remote-storage-server:9201/write'
+# 
+# remote_read:
+#   - url: 'http://remote-storage-server:9201/read'
